@@ -1,5 +1,10 @@
 package com.jihoon.basic.controller;
 
+import javax.validation.Valid;
+
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -78,9 +83,15 @@ public class MainController {
   @PostMapping("/request-body")
   public String postRequestBody(
     // @RequestBody String requestBody
-    @RequestBody PostRequestBodyDto requestBody
+    @RequestBody @Valid PostRequestBodyDto requestBody
   ) {
     return "입력한 Request Body 는 " + requestBody.getName() + "입니다.";
+  }
+
+  // description: Response Entity - Response의 상태 및 헤더, 본문을 직접 제어할 수 있는 클래스 //
+  @GetMapping("/response-entity")
+  public ResponseEntity<String> getResponseEntity() {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Response Entity");
   }
 
 }
