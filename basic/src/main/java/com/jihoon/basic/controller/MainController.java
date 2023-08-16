@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jihoon.basic.dto.request.PostRequestBodyDto;
+import com.jihoon.basic.provider.JwtProvider;
 import com.jihoon.basic.service.MainSerivce;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,8 @@ public class MainController {
   // description: 생성자를 통한 의존성 주입은 @Autowired를 지정할 필요가 없음 //
   // description: 멤버변수를 필수 변수(final)로 지정하여 lombok의 @RequiredArgsConstuctor 로 쉽게 DI 할 수 있음 //
   private final MainSerivce mainSerivce;
+
+  private final JwtProvider jwtProvider;
   
   // description: @RequestMapping 중 Get method에 대해서만 인식 //
   @GetMapping("/")
@@ -103,6 +106,22 @@ public class MainController {
   @GetMapping("/response-entity")
   public ResponseEntity<String> getResponseEntity() {
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Response Entity");
+  }
+
+  @GetMapping("/jwt/{sub}")
+  public String getJwt(
+    @PathVariable("sub") String sub
+  ) {
+    String jwt = jwtProvider.create(sub);
+    return jwt;
+  }
+
+  @PostMapping("/jwt")
+  public String validateJwt(
+    @RequestParam("jwt") String jwt
+  ) {
+    String subject = jwtProvider.validate(jwt);
+    return subject;
   }
 
 }
